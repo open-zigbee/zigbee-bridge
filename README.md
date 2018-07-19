@@ -1,11 +1,11 @@
 # zigbee-shepherd
 An open source ZigBee gateway solution with node.js  
 
-[![NPM](https://nodei.co/npm/zigbee-shepherd.png?downloads=true)](https://nodei.co/npm/zigbee-shepherd/)  
+[![NPM](https://nodei.co/npm/zigbee-bridge.png?downloads=true)](https://nodei.co/npm/zigbee-bridge/)  
 
-[![Travis branch](https://img.shields.io/travis/zigbeer/zigbee-shepherd/master.svg?maxAge=2592000)](https://travis-ci.org/zigbeer/zigbee-shepherd)
-[![npm](https://img.shields.io/npm/v/zigbee-shepherd.svg?maxAge=2592000)](https://www.npmjs.com/package/zigbee-shepherd)
-[![npm](https://img.shields.io/npm/l/zigbee-shepherd.svg?maxAge=2592000)](https://www.npmjs.com/package/zigbee-shepherd)
+[![Build Status](https://travis-ci.com/open-zigbee/zigbee-bridge.svg?branch=master)](https://travis-ci.com/open-zigbee/zigbee-bridge)
+[![npm](https://img.shields.io/npm/v/zigbee-bridge.svg?maxAge=2592000)](https://www.npmjs.com/package/zigbee-bridge)
+[![npm](https://img.shields.io/npm/l/zigbee-bridge.svg?maxAge=2592000)](https://www.npmjs.com/package/zigbee-bridge)
 
 <br />
 
@@ -55,7 +55,7 @@ shepherd.on('ready', function () {
     shepherd.permitJoin(60, function (err) {
         if (err)
             console.log(err);
-    }); 
+    });
 });
 
 shepherd.start(function (err) {                // start the server
@@ -68,4 +68,4 @@ shepherd.start(function (err) {                // start the server
 
 ## License  
 
-Licensed under [MIT](https://github.com/zigbeer/zigbee-shepherd/blob/master/LICENSE).
+Licensed under [MIT](https://github.com/open-zigbee/zigbee-bridge/blob/master/LICENSE).

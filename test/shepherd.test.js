@@ -8,7 +8,7 @@ var Q = require('q'),
     sinonChai = require('sinon-chai'),
     expect = chai.expect;
 
-var Shepherd = require('../index.js'),
+var Shepherd = require('../'),
     Coord  = require('../lib/model/coord'),
     Device  = require('../lib/model/device'),
     Endpoint  = require('../lib/model/endpoint');
