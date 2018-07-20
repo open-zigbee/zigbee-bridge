@@ -1,4 +1,4 @@
-# zigbee-shepherd
+# zigbee-bridge
 An open source ZigBee gateway solution with node.js  
 
 [![NPM](https://nodei.co/npm/zigbee-bridge.png?downloads=true)](https://nodei.co/npm/zigbee-bridge/)  
@@ -29,7 +29,7 @@ Please visit the [Wiki](https://github.com/zigbeer/zigbee-shepherd/wiki).
 
 * Install zigbee-shepherd
 
-> $ npm install zigbee-shepherd --save
+> $ npm install zigbee-bridge --save
 
 * Hardware
     - [SmartRF05EB (with CC2530EM)](http://www.ti.com/tool/cc2530dk)  
@@ -45,7 +45,7 @@ Please visit the [Wiki](https://github.com/zigbeer/zigbee-shepherd/wiki).
 ## Usage  
 
 ```js
-var ZShepherd = require('zigbee-shepherd');
+var ZShepherd = require('zigbee-bridge');
 var shepherd = new ZShepherd('/dev/ttyUSB0');  // create a ZigBee server
 
 shepherd.on('ready', function () {
