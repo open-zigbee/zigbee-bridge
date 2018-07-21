@@ -1,71 +1,68 @@
 # zigbee-bridge
-An open source ZigBee gateway solution with node.js  
-
-[![NPM](https://nodei.co/npm/zigbee-bridge.png?downloads=true)](https://nodei.co/npm/zigbee-bridge/)  
+An open source ZigBee gateway solution for Node.js 
 
 [![Build Status](https://travis-ci.com/open-zigbee/zigbee-bridge.svg?branch=master)](https://travis-ci.com/open-zigbee/zigbee-bridge)
 [![npm](https://img.shields.io/npm/v/zigbee-bridge.svg?maxAge=2592000)](https://www.npmjs.com/package/zigbee-bridge)
 [![npm](https://img.shields.io/npm/l/zigbee-bridge.svg?maxAge=2592000)](https://www.npmjs.com/package/zigbee-bridge)
 
-<br />
+## Note
 
-## Documentation  
+This project is based on the code forked from https://github.com/zigbeer/zigbee-shepherd.
 
-Please visit the [Wiki](https://github.com/zigbeer/zigbee-shepherd/wiki).
+The reason to refactor the project is that the original project has a lot of bugs and flaws, which cannot fulfill the requirement of many projects which are based on it. The official project has not been actively maintained for a long time, so we decided to maintain it by people who are interested in this project and ZigBee technology in general.
 
-<br />
+Special thanks to [@simenkid](https://github.com/simenkid), [@jackchased](https://github.com/jackchased) and [@hedywings](https://github.com/hedywings) for a great job!
 
-## Overview  
+## Overview
 
-**zigbee-shepherd** is an open source ZigBee gateway solution with node.js. It uses TI's [CC253X](http://www.ti.com/lsds/ti/wireless_connectivity/zigbee/overview.page) wireless SoC as a [zigbee network processor (ZNP)](http://www.ti.com/lit/an/swra444/swra444.pdf), and takes the ZNP approach with [cc-znp](https://github.com/zigbeer/cc-znp) to run the CC253X as a coordinator and to run zigbee-shepherd as the host.
+**zigbee-bridge** is an open source ZigBee gateway solution with node.js. It uses TI's [CC253X](http://www.ti.com/lsds/ti/wireless_connectivity/zigbee/overview.page) wireless SoC as a [zigbee network processor (ZNP)](http://www.ti.com/lit/an/swra444/swra444.pdf), and takes the ZNP approach with [cc-znp](https://github.com/zigbeer/cc-znp) to run the CC253X as a coordinator and to run zigbee-bridge as the host.
 
-* [**A simple demo webapp**](https://github.com/zigbeer/zigbee-demo#readme)
+## [Documentation](./docs/README.md)
 
-![ZigBee Network](https://raw.githubusercontent.com/zigbeer/documents/master/zigbee-shepherd/zigbee_net.png)
+* [Introduction](./docs/Introduction.md)
+* [API](./docs/API.md)
+* [Tutorial](./docs/tutorial/README.md)
+* [Appendix](./docs/Appendix.md)
 
-<br />
-
-## Installation  
-
-* Install zigbee-shepherd
+## Installation
 
 > $ npm install zigbee-bridge --save
 
-* Hardware
-    - [SmartRF05EB (with CC2530EM)](http://www.ti.com/tool/cc2530dk)  
-    - [CC2531 USB Stick](http://www.ti.com/tool/cc2531emk)  
-    - CC2538 (Not tested yet. I don't have the kit.)  
-    - CC2630/CC2650 (Not tested yet. I don't have the kit.)  
+## Hardware
 
-* Firmware
-    - To use CC2530/31 as the coordinator, please download the [**pre-built ZNP image**](https://github.com/zigbeer/documents/tree/master/zigbee-shepherd) to your chip first. The pre-built image has been compiled as a ZNP with ZDO callback, ZCL supports, and functions we need.  
+- [SmartRF05EB (with CC2530EM)](http://www.ti.com/tool/cc2530dk)
+- [CC2531 USB Stick](http://www.ti.com/tool/cc2531emk)
+- CC2538 (Not tested yet)
+- CC2630/CC2650 (Not tested yet)
 
-<br />
+## Firmware
 
-## Usage  
+To use CC2530/31 as the coordinator, please download the [**pre-built ZNP image**](https://github.com/Koenkk/Z-Stack-firmware) to your chip first. The pre-built image has been compiled as a ZNP with ZDO callback, ZCL supports, and functions we need.
+
+## Usage
 
 ```js
-var ZShepherd = require('zigbee-bridge');
-var shepherd = new ZShepherd('/dev/ttyUSB0');  // create a ZigBee server
+const ZBridge = require('zigbee-bridge');
+const bridge = new ZBridge('/dev/ttyUSB0');  // create a ZigBee server
 
-shepherd.on('ready', function () {
-    console.log('Server is ready.');
+bridge.on('ready', () => {
+  console.log('Server is ready.');
 
-    // allow devices to join the network within 60 secs
-    shepherd.permitJoin(60, function (err) {
-        if (err)
-            console.log(err);
-    });
+  // allow devices to join the network within 60 secs
+  bridge.permitJoin(60, (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
 });
 
-shepherd.start(function (err) {                // start the server
-    if (err)
-        console.log(err);
+bridge.start((err) => {  // start the server
+  if (err) {
+    console.log(err);
+  }
 });
 ```
 
-<br />
+## License
 
-## License  
-
-Licensed under [MIT](https://github.com/open-zigbee/zigbee-bridge/blob/master/LICENSE).
+Licensed under [MIT](./LICENSE).
