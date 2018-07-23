@@ -41,7 +41,6 @@
     "dependencies": {
         "areq": "^0.2.0",
         "busyman": "^0.3.0",
-        "cc-znp": "^0.4.2",
         "debug": "^2.6.3",
         "objectbox": "^0.3.0",
         "proving": "^0.1.0",
@@ -50,6 +49,7 @@
         "zive": "^0.2.2",
         "zstack-constants": "^0.2.0",
 
+        "zigbee-bridge-znp": "0.0.1",
         "zigbee-bridge-packet": "0.0.1",
         "zigbee-bridge-definitions": "0.0.2"
     },

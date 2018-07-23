@@ -1,5 +1,5 @@
 # zigbee-bridge
-An open source ZigBee gateway solution for Node.js 
+An open source ZigBee gateway solution for Node.js
 
 [![Build Status](https://travis-ci.com/open-zigbee/zigbee-bridge.svg?branch=master)](https://travis-ci.com/open-zigbee/zigbee-bridge)
 [![npm](https://img.shields.io/npm/v/zigbee-bridge.svg?maxAge=2592000)](https://www.npmjs.com/package/zigbee-bridge)
@@ -15,7 +15,7 @@ Special thanks to [@simenkid](https://github.com/simenkid), [@jackchased](https:
 
 ## Overview
 
-**zigbee-bridge** is an open source ZigBee gateway solution with node.js. It uses TI's [CC253X](http://www.ti.com/lsds/ti/wireless_connectivity/zigbee/overview.page) wireless SoC as a [zigbee network processor (ZNP)](http://www.ti.com/lit/an/swra444/swra444.pdf), and takes the ZNP approach with [cc-znp](https://github.com/zigbeer/cc-znp) to run the CC253X as a coordinator and to run zigbee-bridge as the host.
+**zigbee-bridge** is an open source ZigBee gateway solution with node.js. It uses TI's [CC253X](http://www.ti.com/lsds/ti/wireless_connectivity/zigbee/overview.page) wireless SoC as a [zigbee network processor (ZNP)](http://www.ti.com/lit/an/swra444/swra444.pdf), and takes the ZNP approach with [zigbee-bridge-znp](https://github.com/open-zigbee/zigbee-bridge-znp) to run the CC253X as a coordinator and to run zigbee-bridge as the host.
 
 ## [Documentation](./docs/README.md)
 
