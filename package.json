@@ -5,7 +5,7 @@
 
     "description": "An open source ZigBee gateway solution with node.js.",
 
-    "main": "lib/shepherd.js",
+    "main": "lib/bridge.js",
 
     "keywords": [
         "zigbee",
