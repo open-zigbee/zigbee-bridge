@@ -2,7 +2,7 @@ var Q = require('q'),
     sinon = require('sinon'),
     expect = require('chai').expect,
     EventEmitter = require('events'),
-    Controller = require('../lib/components/controller');
+    Controller = require('../lib/controller');
 
 var Device  = require('../lib/model/device'),
     Endpoint  = require('../lib/model/endpoint'),
@@ -67,7 +67,7 @@ describe('Constructor Check', function () {
     it('should has all correct members after new', function () {
         var controller = new Controller({}, { path: '/dev/ttyUSB0' });
 
-        expect(controller._shepherd).to.be.an('object');
+        expect(controller._bridge).to.be.an('object');
         expect(controller._coord).to.be.null;
         expect(controller._znp).to.be.an('object');
         expect(controller._zdo).to.be.an('object');
@@ -464,13 +464,13 @@ describe('Functional Check', function () {
     var controller;
 
     before(function () {
-        var shepherd = new EventEmitter();
+        var bridge = new EventEmitter();
 
-        shepherd._findDevByAddr = function () {
+        bridge._findDevByAddr = function () {
             return;
         };
 
-        controller = new Controller(shepherd, { path: '/dev/ttyACM0' });
+        controller = new Controller(bridge, { path: '/dev/ttyACM0' });
         controller._coord = coordDev;
     });
 

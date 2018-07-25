@@ -33,9 +33,9 @@
 
 ## Major Classes
 
-This module provides you with **ZShepherd** and **Endpoint** classes.
+This module provides you with **Bridge** and **Endpoint** classes.
 
-* **ZBridge** class brings you a ZigBee Server with network managing facilities, i.e., start/stop the Server, permit device joining, find a joined endpoint. This document uses `bridge` to denote the instance of this class.
+* **Bridge** class brings you a ZigBee Server with network managing facilities, i.e., start/stop the Server, permit device joining, find a joined endpoint. This document uses `bridge` to denote the instance of this class.
 
 * **Endpoint** is the class for creating a software endpoint to represent the remote or local endpoint at server-side. This document uses `ep` to denote the instance of this class. You can invoke methods on an `ep` to operate the endpoint.
 
@@ -76,7 +76,7 @@ const ZBridge = require('zigbee-bridge');
 
 const bridge = new ZBridge('/dev/ttyUSB0', {
   sp: {
-    baudrate: 115200, 
+    baudrate: 115200,
     rtscts: true
   },
   net: {
@@ -302,7 +302,7 @@ Lists the information of devices managed by bridge. The argument accepts a singl
 bridge.list(); // list all
 
 /*
-[ 
+[
   {
     type: 'Router',
     ieeeAddr: '0x00124b0001ce4beb',
@@ -328,7 +328,7 @@ bridge.list(); // list all
 bridge.list('0x00124b0001ce4beb'); // equivalent to bridge.list([ '0x00124b0001ce4beb' ]);
 
 /*
-[ 
+[
   {
     type: 'Router',
     ieeeAddr: '0x00124b0001ce4beb',
@@ -345,7 +345,7 @@ bridge.list('no_such_device'); // equivalent to bridge.list([ 'no_such_device' ]
 bridge.list([ '0x00124b0001ce4beb', 'no_such_device', '0x00124b0001ce3631']);
 
 /*
-[ 
+[
   {
     type: 'Router',
     ieeeAddr: '0x00124b0001ce4beb',
@@ -608,7 +608,7 @@ Fired when there is an incoming indication message. The `msg` is an object with 
 
   * msg.type: `'attReport'`  
   * msg.endpoints: `[ep]`  
-  * msg.data: Content of the report. This object has fields of `cid` and `data`. 
+  * msg.data: Content of the report. This object has fields of `cid` and `data`.
 
   ```js
   {
@@ -654,7 +654,7 @@ Returns the simple descriptor of the endpoint.
 **Examples:**
 
 ```js
-var ep = shepherd.find('0x00124b0001ce4beb', 8);
+var ep = bridge.find('0x00124b0001ce4beb', 8);
 ep.getSimpleDesc();
 
 /*
@@ -864,8 +864,8 @@ Bind this endpoint to the other endpoint or to a group with the specified cluste
 **Examples:**
 
 ```js
-const ep1 = shepherd.find('0x00124b0001ce4beb', 8);
-const ep2 = shepherd.find('0x00124b00014a7dd2', 12);
+const ep1 = bridge.find('0x00124b0001ce4beb', 8);
+const ep2 = bridge.find('0x00124b00014a7dd2', 12);
 
 // bind ep1 to ep2
 ep1.bind('genOnOff', ep2, (err) => {
