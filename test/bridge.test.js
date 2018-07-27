@@ -1,21 +1,21 @@
-var Q = require('q'),
-    fs = require('fs'),
-    path = require('path'),
-    Zive = require('zive'),
-    Ziee = require('ziee'),
-    chai = require('chai'),
-    sinon = require('sinon'),
-    sinonChai = require('sinon-chai'),
-    expect = chai.expect;
+const Q = require('q');
+const fs = require('fs');
+const path = require('path');
+const Zive = require('zive');
+const Ziee = require('ziee');
+const chai = require('chai');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const mock = require('mock-require');
 
-var Bridge = require('../'),
-    Coord  = require('../lib/model/coord'),
-    Device  = require('../lib/model/device'),
-    Endpoint  = require('../lib/model/endpoint');
+const Coord  = require('../lib/model/coord');
+const Device  = require('../lib/model/device');
 
 chai.use(sinonChai);
 
-var coordinator = new Coord({
+const expect = chai.expect;
+
+const coordinator = new Coord({
     type: 0,
     ieeeAddr: '0x00124b00019c2ee9',
     nwkAddr: 0,
@@ -23,7 +23,7 @@ var coordinator = new Coord({
     epList: [ 1, 2]
 });
 
-var dev1 = new Device({
+const dev1 = new Device({
     type: 1,
     ieeeAddr: '0x00137a00000161f2',
     nwkAddr: 100,
@@ -31,9 +31,9 @@ var dev1 = new Device({
     epList: [ 1 ]
 });
 
-var zApp = new Zive({ profId: 0x0104, devId: 6 }, new Ziee());
+const zApp = new Zive({ profId: 0x0104, devId: 6 }, new Ziee());
 
-describe('Top Level of Tests', function () {
+describe('Bridge Top Level of Tests', function () {
     before(function (done) {
         var unlink1 = false,
             unlink2 = false;
@@ -88,10 +88,18 @@ describe('Top Level of Tests', function () {
     });
 
     describe('Constructor Check', function () {
-        var bridge;
+        let Bridge;
+        let bridge;
+
         before(function () {
+            mock('objectbox', function(){});
+            Bridge = mock.reRequire('../lib/bridge');
             bridge = new Bridge('/dev/ttyUSB0', { dbPath: __dirname + '/database/dev.db' });
         });
+
+        after(function () {
+            mock.stop('objectbox');
+        })
 
         it('should has all correct members after new', function () {
             expect(bridge._startTime).to.be.equal(0);
@@ -123,8 +131,10 @@ describe('Top Level of Tests', function () {
     });
 
     describe('Signature Check', function () {
-        var bridge;
+        let bridge;
+
         before(function () {
+            Bridge = mock.reRequire('../lib/bridge');
             bridge = new Bridge('/dev/ttyUSB0', { dbPath: __dirname + '/database/dev.db' });
             bridge._enabled = true;
         });
@@ -196,10 +206,11 @@ describe('Top Level of Tests', function () {
     });
 
     describe('Functional Check', function () {
-        var bridge;
-        before(function () {
-            bridge = new Bridge('/dev/ttyUSB0', { dbPath: __dirname + '/database/dev1.db' });
+        let bridge;
 
+        before(function () {
+            const Bridge = mock.reRequire('../lib/bridge');
+            bridge = new Bridge('/dev/ttyUSB0', { dbPath: __dirname + '/database/dev1.db' });
             bridge.controller.request = function (subsys, cmdId, valObj, callback) {
                 var deferred = Q.defer();
 
@@ -233,7 +244,7 @@ describe('Top Level of Tests', function () {
         describe('#.start', function () {
             this.timeout(6000);
 
-            it('should start ok, _ready and reday should be fired, _enabled,', function (done) {
+            it('should start ok, _ready and ready should be fired, _enabled,', function (done) {
                 var _readyCbCalled = false,
                     readyCbCalled = false,
                     startCbCalled = false,

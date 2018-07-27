@@ -55,9 +55,10 @@
     },
 
     "devDependencies": {
-        "chai": "^3.5.0",
         "mocha": "^3.2.0",
-        "sinon": "^1.17.4",
-        "sinon-chai": "^2.8.0"
+            "chai": "^3.5.0",
+            "sinon": "^1.17.4",
+            "sinon-chai": "^2.8.0",
+            "mock-require": "^3.0.2"
     }
 }
