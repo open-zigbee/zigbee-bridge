@@ -1,6 +1,6 @@
 {
     "name": "zigbee-bridge",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "license": "MIT",
 
     "description": "An open source ZigBee gateway solution with node.js.",
