@@ -36,8 +36,8 @@ To use CC2530/31 as the coordinator, please download the [**pre-built ZNP image*
 * Start the bridge
 
 ```js
-const ZBridge = require('zigbee-bridge');
-const bridge = new ZBridge('/dev/ttyUSB0'); // create a ZigBee server
+const Bridge = require('zigbee-bridge');
+const bridge = new Bridge('/dev/ttyUSB0'); // create a ZigBee server
 
 bridge.on('ready', () => {
   console.log('Server is ready.');

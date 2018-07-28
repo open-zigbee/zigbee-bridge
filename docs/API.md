@@ -1,8 +1,8 @@
 # API
 
 - [Major Classes](#major-classes)
-- [ZBridge Class](#zbridge-class)
-    - [new ZBridge(path[, opts])](#new-zbridgepath-opts)
+- [Bridge Class](#bridge-class)
+    - [new Bridge(path[, opts])](#new-bridgepath-opts)
     - [.start([callback])](#startcallback)
     - [.stop([callback])](#stopcallback)
     - [.reset(mode[, callback])](#resetmode-callback)
@@ -24,11 +24,11 @@
     - [.getNwkAddr()](#getnwkaddr)
     - [.foundation(cId, cmd, zclData[, cfg], callback)](#foundationcid-cmd-zcldata-cfg-callback)
     - [.functional(cId, cmd, zclData[, cfg], callback)](#functionalcid-cmd-zcldata-cfg-callback)
-    - [.read(cId, attrId, callback)](#readcid-attrid-callback)
-    - [.write(cId, attrId, data, callback)](#writecid-attrid-data-callback)
+    - [.read(cId, attrIdOrDef, callback)](#readcid-attridordef-callback)
+    - [.write(cId, attrIdOrDef, data, callback)](#writecid-attridordef-data-callback)
     - [.bind(cId, dstEpOrGrpId[, callback])](#bindcid-dsteporgrpid-callback)
     - [.unbind(cId, dstEpOrGrpId[, callback])](#unbindcid-dsteporgrpid-callback)
-    - [.report(cId, attrId, minInt, maxInt[, repChange][, callback])](#reportcid-attrid-minint-maxint-repchange-callback)
+    - [.report(cId, attrIdOrDef, minInt, maxInt[, repChange][, callback])](#reportcid-attridordef-minint-maxint-repchange-callback)
     - [.dump()](#dump)
 
 ## Major Classes
@@ -39,15 +39,15 @@ This module provides you with **Bridge** and **Endpoint** classes.
 
 * **Endpoint** is the class for creating a software endpoint to represent the remote or local endpoint at server-side. This document uses `ep` to denote the instance of this class. You can invoke methods on an `ep` to operate the endpoint.
 
-## ZBridge Class
+## Bridge Class
 
 Exposed by `require('zigbee-bridge')`
 
 ********************************************
 
-### new ZBridge(path[, opts])
+### new Bridge(path[, opts])
 
-Create a new instance of the `ZBridge` class. The created instance is a ZigBee gateway that runs with node.js.
+Create a new instance of the `Bridge` class. The created instance is a ZigBee gateway that runs with node.js.
 
 **Arguments:**
 
@@ -72,9 +72,9 @@ Create a new instance of the `ZBridge` class. The created instance is a ZigBee g
 **Examples:**
 
 ```js
-const ZBridge = require('zigbee-bridge');
+const Bridge = require('zigbee-bridge');
 
-const bridge = new ZBridge('/dev/ttyUSB0', {
+const bridge = new Bridge('/dev/ttyUSB0', {
   sp: {
     baudrate: 115200,
     rtscts: true
@@ -794,14 +794,14 @@ ep.functional('genOnOff', 'toggle', {}, (err, rsp) => {
 
 ********************************************
 
-### .read(cId, attrId, callback)
+### .read(cId, attrIdOrDef, callback)
 
 The shorthand to read a single attribute.
 
 **Arguments:**
 
-1. `cId` (_String_ | _Number_): [Cluster id](https://github.com/zigbeer/zcl-id/wiki#Table).
-2. `attrId` (_String_ | _Number_): [Attribute id](https://github.com/zigbeer/zcl-id/blob/master/definitions/cluster_defs.json) of which attribute you like to read.
+1. `cId` (_String_ | _Number_): [Cluster id](https://github.com/open-zigbee/zigbee-bridge-definitions/blob/master/docs/API.md#cluster).
+2. `attrIdOrDef` (_String_ | _Number_ | _Object_): [Attribute id](https://github.com/open-zigbee/zigbee-bridge-definitions/blob/master/definitions/cluster_defs.json) of which attribute you like to read or Attribute definition in format `{ id: Number, type: String }` (useful for proprietary attributes).
 3. `callback` (_Function_): `function (err, data) { }`. This `data` is the attribute value.
 
 **Returns:**
@@ -811,23 +811,32 @@ The shorthand to read a single attribute.
 **Examples:**
 
 ```js
+// attribute id
 ep.read('genBasic', 'manufacturerName', (err, data) => {
   if (!err) {
     console.log(data);  // 'TexasInstruments'
   }
 });
+
+// attribute definition (example for Xiaomi devices proprietary attribute)
+ep.read('genBasic', { id: 65281, type: 'charStr' }, (err, data) => {
+  if (!err) {
+    console.log(data);  // 'j23nd10kokKSn94jb...'
+  }
+});
+
 ```
 
 ********************************************
 
-### .write(cId, attrId, data, callback)
+### .write(cId, attrIdOrDef, data, callback)
 
 The shorthand to write a single attribute.
 
 **Arguments:**
 
-1. `cId` (_String_ | _Number_): [Cluster id](https://github.com/zigbeer/zcl-id/wiki#Table).
-2. `attrId` (_String_ | _Number_): [Attribute id](https://github.com/zigbeer/zcl-id/blob/master/definitions/cluster_defs.json) of which attribute you like to write.
+1. `cId` (_String_ | _Number_): [Cluster id](https://github.com/open-zigbee/zigbee-bridge-definitions/blob/master/docs/API.md#cluster).
+2. `attrIdOrDef` (_String_ | _Number_ | _Object_): [Attribute id](https://github.com/open-zigbee/zigbee-bridge-definitions/blob/master/definitions/cluster_defs.json) of which attribute you like to write or Attribute definition in format `{ id: Number, type: String }` (useful for proprietary attributes).
 3. `data` (_String_ | _Number_): Depends on the type of [attribute](https://github.com/zigbeer/zcl-id/blob/master/definitions/cluster_defs.json).
 4. `callback` (_Function_): `function (err, data) { }`. This `data` is the attribute value.
 
@@ -838,9 +847,17 @@ The shorthand to write a single attribute.
 **Examples:**
 
 ```js
+// attribute id
 ep.write('genBasic', 'locationDesc', 'office', (err, data) => {
   if (!err) {
     console.log(data);  // 'office'
+  }
+});
+
+// attribute definition
+ep.write('genBasic', { id: 47613, type: 'charStr' }, 'green', (err, data) => {
+  if (!err) {
+    console.log(data);  // 'green'
   }
 });
 ```
@@ -915,14 +932,14 @@ ep1.unbind('genOnOff', 3, (err) => {
 
 ********************************************
 
-### .report(cId, attrId, minInt, maxInt[, repChange][, callback])
+### .report(cId, attrIdOrDef, minInt, maxInt[, repChange][, callback])
 
 Set the report configuration of the attribute to endpoint.
 
 **Arguments:**  
 
-1. `cId` (_String_ | _Number_): [Cluster id](https://github.com/zigbeer/zcl-id/wiki#Table).
-2. `attrId` (_String_ | _Number_): [Attribute id](https://github.com/zigbeer/zcl-id/blob/master/definitions/cluster_defs.json) of which attribute you like to report.
+1. `cId` (_String_ | _Number_): [Cluster id](https://github.com/open-zigbee/zigbee-bridge-definitions/blob/master/docs/API.md#cluster).
+2. `attrIdOrDef` (_String_ | _Number_ | _Object_): [Attribute id](https://github.com/open-zigbee/zigbee-bridge-definitions/blob/master/definitions/cluster_defs.json) of which attribute you like to report or Attribute definition in format `{ id: Number, type: String }` (useful for proprietary attributes).
 3. `minInt` (_Number_): The minimum reporting interval, in seconds.
 4. `maxInt` (_Number_): The maximum reporting interval, in seconds.
 5. `repChange` (_Number_): Reportable change. The attribute should report its value when the value is changed more than this setting. If attributes with **analog** data type this argument is mandatory.
@@ -935,9 +952,17 @@ Set the report configuration of the attribute to endpoint.
 **Examples:**
 
 ```js
+// attribute id
 ep1.report('msTemperatureMeasurement', 'measuredValue', 3, 5, 100, (err) => {
   if (!err) {
     console.log('Successfully configure ep1 report temperature attribute!');
+  }
+});
+
+// attribute definition (example for Xiaomi devices proprietary attribute)
+ep1.report('genBasic', { id: 65281, type: 'charStr' }, 1, 60, 100, (err) => {
+  if (!err) {
+    console.log('Successfully configure ep1 report proprietary attribute!');
   }
 });
 ```

@@ -10,7 +10,7 @@
   * [Usage](Introduction.md#usage)
 * [API](API.md)
   * [Major Classes](API.md#major-classes)
-  * [ZBridge Class](API.md#zbridge-class)
+  * [Bridge Class](API.md#bridge-class)
   * [Endpoint Class](API.md#endpoint-class)
 * [Tutorial](tutorial/README.md)
   * [Flashing stick](tutorial/FlashingStick.md)

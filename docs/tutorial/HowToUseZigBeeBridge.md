@@ -18,11 +18,11 @@ $ mkdir zbserver && cd zbserver
 
 ## 3. Edit **server.js**, Start ZigBee Server
 
-* [1] [ZBridge Class](../API.md#zbridge-class)
+* [1] [Bridge Class](../API.md#bridge-class)
 
 ```js
-const ZBridge = require('zigbee-bridge');
-const zserver = new ZBridge('/dev/ttyACM0');
+const Bridge = require('zigbee-bridge');
+const zserver = new Bridge('/dev/ttyACM0');
 
 // see [1]
 zserver.on('ready', () => {
@@ -58,12 +58,12 @@ $ serialport-list
 
 ## 5. Permit ZigBee devices join the network  
 
-* [1] [ZBridge Class - event: 'ready'](../API.md#event-ready)
-* [2] [ZBridge Class - event: 'ind'](../API.md#event-ind)
+* [1] [Bridge Class - event: 'ready'](../API.md#event-ready)
+* [2] [Bridge Class - event: 'ind'](../API.md#event-ind)
 
 ```js
-var ZBridge = require('zigbee-bridge');
-var zserver = new ZBridge('/dev/ttyACM0');
+var Bridge = require('zigbee-bridge');
+var zserver = new Bridge('/dev/ttyACM0');
 
 // see [1]
 zserver.on('ready', () => {
