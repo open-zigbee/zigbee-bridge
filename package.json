@@ -12,10 +12,6 @@
         "cc253x"
     ],
 
-    "scripts": {
-        "test": "mocha -u bdd --reporter spec"
-    },
-
     "homepage": "https://github.com/open-zigbee/zigbee-bridge#readme",
     "repository": {
         "type": "git",
@@ -38,6 +34,11 @@
         }
     ],
 
+    "scripts": {
+        "test": "mocha -u bdd --reporter spec",
+        "lint": "eslint ."
+    },
+
     "dependencies": {
         "areq": "^0.2.0",
         "busyman": "^0.3.0",
@@ -59,6 +60,9 @@
             "chai": "^3.5.0",
             "sinon": "^1.17.4",
             "sinon-chai": "^2.8.0",
-            "mock-require": "^3.0.2"
+            "mock-require": "^3.0.2",
+
+        "eslint": "5.2.0",
+            "eslint-config-open-zigbee": "0.0.2"
     }
 }
