@@ -1,6 +1,6 @@
 {
     "name": "zigbee-bridge",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "license": "MIT",
 
     "description": "An open source ZigBee gateway solution with node.js.",
@@ -50,9 +50,9 @@
         "zive": "^0.2.2",
         "zstack-constants": "^0.2.0",
 
-        "zigbee-bridge-znp": "0.0.1",
-        "zigbee-bridge-packet": "0.0.3",
-        "zigbee-bridge-definitions": "0.0.2"
+        "zigbee-bridge-znp": "0.0.2",
+        "zigbee-bridge-packet": "0.0.4",
+        "zigbee-bridge-definitions": "0.0.3"
     },
 
     "devDependencies": {
