@@ -1,6 +1,6 @@
 {
     "name": "zigbee-bridge",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "license": "MIT",
 
     "description": "An open source ZigBee gateway solution with node.js.",
@@ -63,6 +63,6 @@
             "mock-require": "^3.0.2",
 
         "eslint": "5.2.0",
-            "eslint-config-open-zigbee": "0.0.2"
+            "eslint-config-open-zigbee": "0.0.3"
     }
 }
