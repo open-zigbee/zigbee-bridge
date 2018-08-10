@@ -47,20 +47,16 @@ const bridge = new Bridge('/dev/ttyUSB0');  // create a ZigBee server
 
 bridge.on('ready', () => {
   console.log('Server is ready.');
-
   // allow devices to join the network within 60 secs
-  bridge.permitJoin(60, (err) => {
-    if (err) {
-      console.log(err);
-    }
-  });
+  bridge.permitJoin(60)
+    .then(() => console.log('permit join started.'))
+    .catch((err) => console.log(err));
 });
 
-bridge.start((err) => {  // start the server
-  if (err) {
-    console.log(err);
-  }
-});
+// start the bridge
+bridge.start()
+  .then(() => console.log('bridge is now running.'))
+  .catch((err) => console.log(err));
 ```
 
 ## License

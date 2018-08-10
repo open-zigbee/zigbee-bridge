@@ -3,10 +3,10 @@
 - [Major Classes](#major-classes)
 - [Bridge Class](#bridge-class)
     - [new Bridge(path[, opts])](#new-bridgepath-opts)
-    - [.start([callback])](#startcallback)
-    - [.stop([callback])](#stopcallback)
-    - [.reset(mode[, callback])](#resetmode-callback)
-    - [.permitJoin(time[, type][, callback])](#permitjointime-type-callback)
+    - [.start()](#start)
+    - [.stop()](#stop)
+    - [.reset(mode)](#resetmode)
+    - [.permitJoin(time[, type])](#permitjointime-type)
     - [.info()](#info)
     - [.mount(zApp, callback)](#mountzapp-callback)
     - [.list([ieeeAddrs])](#listieeeaddrs)
@@ -93,14 +93,10 @@ const bridge = new Bridge('/dev/ttyUSB0', {
 
 ********************************************
 
-### .start([callback])
+### .start()
 
 Connect to the ZNP and start bridge.
 
-**Arguments:**
-
-1. `callback` (_Function_): `function (err) { }`. Get called when `bridge` starts.
-
 **Returns:**
 
 * (_Promise_): promise
@@ -108,29 +104,17 @@ Connect to the ZNP and start bridge.
 **Examples:**
 
 ```js
-// callback style
-bridge.start((err) => {
-  if (!err) {
-    console.log('bridge is now running.');
-  }
-});
-
 // promise style
-bridge.start().then(() => {
-  console.log('bridge is now running.');
-}).done();
+bridge.start()
+  .then(() => console.log('bridge is now running.'));
 ```
 
 ********************************************
 
-### .stop([callback])
+### .stop()
 
 Disconnect from the ZNP and stop bridge.
 
-**Arguments:**
-
-1. `callback` (_Function_): `function (err) { }`. Get called when `bridge` stops.
-
 **Returns:**
 
 * (_Promise_): promise
@@ -138,23 +122,19 @@ Disconnect from the ZNP and stop bridge.
 **Examples:**
 
 ```js
-bridge.stop((err) => {
-  if (!err) {
-    console.log('bridge is stopped.');
-  }
-});
+bridge.stop()
+  .then(() => console.log('bridge is stopped.'));
 ```
 
 ********************************************
 
-### .reset(mode[, callback])
+### .reset(mode)
 
 Reset the ZNP.
 
 **Arguments:**
 
 1. `mode` (_String_ | _Number_): Set to `'hard'` or `0` to trigger the hardware reset (SoC resets), and set to `'soft'` or `1` to trigger the software reset (zstack resets).
-2. `callback` (_Function_): `function (err) { }`.  Get called when reset completes.
 
 **Returns:**
 
@@ -164,23 +144,17 @@ Reset the ZNP.
 
 ```js
 // hard reset
-bridge.reset(0, (err) => {
-  if (!err) {
-    console.log('reset successfully.');
-  }
-});
+bridge.reset(0)
+  .then(() => console.log('reset successfully.'));
 
 // soft reset
-bridge.reset('soft', (err) => {
-  if (!err) {
-    console.log('reset successfully.');
-  }
-});
+bridge.reset('soft')
+  .then(() => console.log('reset successfully.'));
 ```
 
 ********************************************
 
-### .permitJoin(time[, type][, callback])
+### .permitJoin(time[, type])
 
 Allow or disallow devices to join the network. A `permitJoining` event will be fired every tick of countdown (per second) when `bridge` is allowing device to join its network.
 
@@ -188,7 +162,6 @@ Allow or disallow devices to join the network. A `permitJoining` event will be f
 
 1. `time` (_Number_): Time in seconds for bridge to allow devices to join the network. This property accepts a value ranging from  `0` to `255`. Given with `0` can immediately close the admission and given with `255` will always allow devices to join in.
 2. `type` (_String_ | _Number_): Set it to `'coord'` or `0` to let devices join the network through the coordinator, and set it to `'all'` or `1` to let devices join the network through the coordinator or routers. The default value is `'all'`.
-3. `callback` (_Function_): `function (err) { }`. Get called when permitJoining process starts.
 
 **Returns:**
 
@@ -202,11 +175,8 @@ bridge.on('permitJoining', (joinTimeLeft) => {
 });
 
 // default is allow devices to join coordinator or routers
-bridge.permitJoin(60, (err) => {
-  if (!err) {
-    console.log('ZNP is now allowing devices to join the network for 60 seconds.');
-  }
-});
+bridge.permitJoin(60)
+  .then(() => console.log('ZNP is now allowing devices to join the network for 60 seconds.'));
 
 // allow devices only to join coordinator
 bridge.permitJoin(60, 'coord');

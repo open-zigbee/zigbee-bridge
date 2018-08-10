@@ -168,33 +168,41 @@ describe('Bridge Top Level of Tests', function() {
         });
 
         describe('#.reset', function() {
-            it('should throw if mode is not a number and not a string', function() {
-                expect(function() {
-                    bridge.reset({});
-                }).to.throw(TypeError);
-                expect(function() {
-                    bridge.reset(true);
-                }).to.throw(TypeError);
+            it('should throw if mode is not a number and not a string', () => {
+                return Promise.all([
+                    bridge.reset({})
+                        .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                    bridge.reset(true)
+                        .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                ]);
             });
         });
 
         describe('#.permitJoin', function() {
             it('should throw if time is not a number', function() {
-                expect(function() {
-                    bridge.permitJoin({});
-                }).to.throw(TypeError);
-                expect(function() {
-                    bridge.permitJoin(true);
-                }).to.throw(TypeError);
+                return Promise.all([
+                    bridge.permitJoin({})
+                        .catch((err) => {
+                            expect(err).to.be.instanceof(TypeError);
+                        }),
+                    bridge.permitJoin(true)
+                        .catch((err) => {
+                            expect(err).to.be.instanceof(TypeError);
+                        }),
+                ]);
             });
 
             it('should throw if type is given but not a number and not a string', function() {
-                expect(function() {
-                    bridge.permitJoin({});
-                }).to.throw(TypeError);
-                expect(function() {
-                    bridge.permitJoin(true);
-                }).to.throw(TypeError);
+                return Promise.all([
+                    bridge.permitJoin({})
+                        .catch((err) => {
+                            expect(err).to.be.instanceof(TypeError);
+                        }),
+                    bridge.permitJoin(true)
+                        .catch((err) => {
+                            expect(err).to.be.instanceof(TypeError);
+                        }),
+                ]);
             });
         });
 
@@ -298,11 +306,12 @@ describe('Bridge Top Level of Tests', function() {
 
         describe('#.permitJoin', function() {
             it('should not throw if bridge is not enabled when permitJoin invoked - bridge is disabled.', function(done) {
-                bridge.permitJoin(3).fail(function(err) {
-                    if (err.message === 'bridge is not enabled.') {
-                        done();
-                    }
-                }).done();
+                bridge.permitJoin(3)
+                    .catch((err) => {
+                        if (err.message === 'bridge is not enabled.') {
+                            done();
+                        }
+                    });
             });
 
             it('should trigger permitJoin counter and event when permitJoin invoked - bridge is enabled.', function(done) {
@@ -364,15 +373,16 @@ describe('Bridge Top Level of Tests', function() {
                     }
                 });
 
-                bridge.start(function(err) {
-                    startCbCalled = true;
-                    if (_readyCbCalled && readyCbCalled && startCbCalled && bridge._enabled) {
-                        setTimeout(function() {
-                            startStub.restore();
-                            done();
-                        }, 200);
-                    }
-                });
+                bridge.start()
+                    .then(() => {
+                        startCbCalled = true;
+                        if (_readyCbCalled && readyCbCalled && startCbCalled && bridge._enabled) {
+                            setTimeout(function() {
+                                startStub.restore();
+                                done();
+                            }, 200);
+                        }
+                    });
             });
         });
 
@@ -512,11 +522,8 @@ describe('Bridge Top Level of Tests', function() {
             this.timeout(60000);
 
             it('should fire incoming message and get a new device', function(done) {
-                let acceptDevIncomingStub = sinon.stub(bridge, 'acceptDevIncoming', function(devInfo, cb) {
-                    setTimeout(function() {
-                        let accepted = true;
-                        cb(null, accepted);
-                    }, 6000);
+                let acceptDevIncomingStub = sinon.stub(bridge, 'acceptDevIncoming', (devInfo, cb) => {
+                    setTimeout(() => cb(null, true), 200);
                 });
 
                 bridge.once('ind:incoming', function(dev) {
@@ -561,7 +568,7 @@ describe('Bridge Top Level of Tests', function() {
                     }, 100);
                 });
 
-                bridge.reset('soft').done();
+                bridge.reset('soft');
             });
 
             it('should reset - hard', function(done) {
@@ -586,27 +593,20 @@ describe('Bridge Top Level of Tests', function() {
                     }, 100);
                 });
 
-                bridge.reset('hard').done();
+                bridge.reset('hard');
             });
         });
 
         describe('#.stop', function() {
-            it('should stop ok, permitJoin 0 should be fired, _enabled should be false', function(done) {
+            it('should stop ok, permitJoin 0 should be fired, _enabled should be false', (done) => {
                 let joinFired = false;
-
-
                 let stopCalled = false;
 
-
-                let closeStub = sinon.stub(bridge.controller, 'close', function(callback) {
-                    let deferred = Q.defer();
-
-                    deferred.resolve();
-
-                    return deferred.promise.nodeify(callback);
+                let closeStub = sinon.stub(bridge.controller, 'close', () => {
+                    return Promise.resolve();
                 });
 
-                bridge.once('permitJoining', function(joinTime) {
+                bridge.once('permitJoining', (joinTime) => {
                     joinFired = true;
                     if (joinTime === 0 && !bridge._enabled && stopCalled && joinFired) {
                         closeStub.restore();
@@ -614,13 +614,14 @@ describe('Bridge Top Level of Tests', function() {
                     }
                 });
 
-                bridge.stop(function(err) {
-                    stopCalled = true;
-                    if (!err && !bridge._enabled && stopCalled && joinFired) {
-                        closeStub.restore();
-                        done();
-                    }
-                });
+                bridge.stop()
+                    .then(() => {
+                        stopCalled = true;
+                        if (!bridge._enabled && stopCalled && joinFired) {
+                            closeStub.restore();
+                            done();
+                        }
+                    });
             });
         });
     });

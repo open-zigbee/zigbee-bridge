@@ -129,43 +129,51 @@ describe('Signature Check', function() {
 
     controller._coord = coordDev;
 
-    describe('#.reset', function() {
-        it('should be a function', function() {
+    describe('#.reset', () => {
+        let requestStub;
+
+        before(() => {
+            requestStub = sinon.stub(controller, 'request', function(subsys, cmdId, valObj, callback) {
+                let deferred = Q.defer();
+
+                setImmediate(function() {
+                    deferred.resolve({status: 0});
+                });
+
+                return deferred.promise.nodeify(callback);
+            });
+        });
+
+        after(() => {
+            requestStub.restore();
+        });
+
+        it('should be a function', () => {
             expect(controller.reset).to.be.a('function');
         });
 
-        it('should throw if mode is not a number and not a string', function() {
-            expect(function() {
-                return controller.reset([], function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.reset({}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.reset(undefined, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.reset(null, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.reset(NaN, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.reset(true, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.reset(new Date(), function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.reset(function() {}, function() {});
-            }).to.throw(TypeError);
+        it('should throw if mode is not a number and not a string', () => {
+            return Promise.all([
+                controller.reset([])
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.reset({})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.reset(undefined)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.reset(null)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.reset(NaN)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.reset(true)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.reset(new Date())
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.reset(function() {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
 
-            expect(function() {
-                return controller.reset(1, function() {});
-            }).not.to.throw(TypeError);
-            expect(function() {
-                return controller.reset('soft', function() {});
-            }).not.to.throw(TypeError);
+                controller.reset(1, function() {}),
+                controller.reset('soft', function() {}),
+            ]);
         });
     });
 
@@ -278,76 +286,75 @@ describe('Signature Check', function() {
     });
 
     describe('#.permitJoin', function() {
+        let requestStub;
+
+        before(() => {
+            requestStub = sinon.stub(controller, 'request', function(subsys, cmdId, valObj, callback) {
+                let deferred = Q.defer();
+
+                setImmediate(function() {
+                    deferred.resolve({status: 0});
+                });
+
+                return deferred.promise.nodeify(callback);
+            });
+        });
+
+        after(() => {
+            requestStub.restore();
+        });
+
         it('should be a function', function() {
             expect(controller.permitJoin).to.be.a('function');
         });
 
-        it('should throw if joinTime is not a number', function() {
-            expect(function() {
-                return controller.permitJoin('x', 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin([], 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin({}, 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(undefined, 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(null, 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(NaN, 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(true, 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(new Date(), 'coord', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(function() {}, 'coord', function() {});
-            }).to.throw(TypeError);
+        it('should throw if joinTime is not a number', () => {
+            return Promise.all([
+                controller.permitJoin('x', 'coord')
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin([], 'coord')
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin({}, 'coord')
+                    .catch((err) => expect(err).to.be.instanceOf(TypeError)),
+                controller.permitJoin(undefined, 'coord')
+                    .catch((err) => expect(err).to.be.instanceOf(TypeError)),
+                controller.permitJoin(null, 'coord')
+                    .catch((err) => expect(err).to.be.instanceOf(TypeError)),
+                controller.permitJoin(NaN, 'coord')
+                    .catch((err) => expect(err).to.be.instanceOf(TypeError)),
+                controller.permitJoin(true, 'coord')
+                    .catch((err) => expect(err).to.be.instanceOf(TypeError)),
+                controller.permitJoin(new Date(), 'coord')
+                    .catch((err) => expect(err).to.be.instanceOf(TypeError)),
+                controller.permitJoin(function() {}, 'coord')
+                    .catch((err) => expect(err).to.be.instanceOf(TypeError)),
 
-            expect(function() {
-                return controller.permitJoin(10, 'coord', function() {});
-            }).not.to.throw(TypeError);
+                controller.permitJoin(10, 'coord'),
+            ]);
         });
 
-        it('should throw if joinType is not a number and not a string', function() {
-            expect(function() {
-                return controller.permitJoin(10, [], function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, undefined, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, null, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, NaN, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, true, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, new Date(), function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, function() {}, function() {});
-            }).to.throw(TypeError);
+        it('should throw if joinType is not a number and not a string', () => {
+            return Promise.all([
+                controller.permitJoin(10, [])
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin(10, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin(10, undefined)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin(10, null)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin(10, NaN)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin(10, true)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin(10, new Date())
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.permitJoin(10, function() {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
 
-            expect(function() {
-                return controller.permitJoin(10, 1, function() {});
-            }).not.to.throw(TypeError);
-            expect(function() {
-                return controller.permitJoin(10, 'coord', function() {});
-            }).not.to.throw(TypeError);
+                controller.permitJoin(10, 1, function() {}),
+                controller.permitJoin(10, 'coord', function() {}),
+            ]);
         });
     });
 
@@ -932,12 +939,11 @@ describe('Functional Check', function() {
                 });
             });
 
-            controller.start(function(err) {
-                if (!err) {
+            controller.start()
+                .then(() => {
                     initStub.restore();
                     done();
-                }
-            });
+                });
         });
     });
 
@@ -950,12 +956,11 @@ describe('Functional Check', function() {
                 });
             });
 
-            controller.close(function(err) {
-                if (!err) {
+            controller.close()
+                .then(() => {
                     closeStub.restore();
                     done();
-                }
-            });
+                });
         });
     });
 
@@ -977,12 +982,11 @@ describe('Functional Check', function() {
                 }
             });
 
-            controller.reset('soft', function(err) {
-                if (!err) {
+            controller.reset('soft')
+                .then(() => {
                     requestStub.restore();
                     done();
-                }
-            });
+                });
         });
 
         it('hard reset', function(done) {
@@ -1002,12 +1006,11 @@ describe('Functional Check', function() {
                 }
             });
 
-            controller.reset('hard', function(err) {
-                if (!err) {
+            controller.reset('hard')
+                .then(() => {
                     requestStub.restore();
                     done();
-                }
-            });
+                });
         });
     });
 
@@ -1050,7 +1053,7 @@ describe('Functional Check', function() {
 
     describe('#.permitJoin', function() {
         it('only permit devices join the network through the coordinator', function(done) {
-            let requestStub = sinon.stub(controller, 'request', function(subsys, cmdId, valObj, callback) {
+            let requestStub = sinon.stub(controller, 'request', (subsys, cmdId, valObj, callback) => {
                 let deferred = Q.defer();
 
                 expect(valObj.addrmode).to.be.equal(0x02);
@@ -1067,12 +1070,11 @@ describe('Functional Check', function() {
                 expect(permitJoinTime).to.be.equal(60);
             });
 
-            controller.permitJoin(60, 'coord', function(err) {
-                if (!err) {
+            controller.permitJoin(60, 'coord')
+                .then(() => {
                     requestStub.restore();
                     done();
-                }
-            });
+                });
         });
 
         it('permit devices join the network through the coordinator or routers', function(done) {
@@ -1093,12 +1095,11 @@ describe('Functional Check', function() {
                 expect(permitJoinTime).to.be.equal(60);
             });
 
-            controller.permitJoin(60, 'all', function(err) {
-                if (!err) {
+            controller.permitJoin(60, 'all')
+                .then(() => {
                     requestStub.restore();
                     done();
-                }
-            });
+                });
         });
     });
 
