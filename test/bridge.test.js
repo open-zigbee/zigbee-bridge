@@ -259,16 +259,15 @@ describe('Bridge Top Level of Tests', function() {
         });
 
         describe('#.lqi', function() {
-            it('should throw if ieeeAddr is not a string', function() {
-                expect(function() {
-                    bridge.lqi({});
-                }).to.throw(TypeError);
-                expect(function() {
-                    bridge.lqi(true);
-                }).to.throw(TypeError);
-                expect(function() {
-                    bridge.lqi('ceed');
-                }).not.to.throw(TypeError);
+            it('should throw if ieeeAddr is not a string', () => {
+                return Promise.all([
+                    bridge.lqi({})
+                        .catch((e) => expect(e).to.be.instanceof(TypeError)),
+                    bridge.lqi(true)
+                        .catch((e) => expect(e).to.be.instanceof(TypeError)),
+                    bridge.lqi('ceed')
+                        .catch((e) => expect(e).to.be.instanceof(Error)),
+                ]);
             });
         });
 
@@ -486,14 +485,13 @@ describe('Bridge Top Level of Tests', function() {
                     return deferred.promise.nodeify(callback);
                 });
 
-                bridge.lqi('0x00137a00000161f2', function(err, data) {
-                    if (!err) {
+                bridge.lqi('0x00137a00000161f2')
+                    .then((data) =>{
                         expect(data[0].ieeeAddr).to.be.equal('0x0123456789abcdef');
                         expect(data[0].lqi).to.be.equal(123);
                         requestStub.restore();
                         done();
-                    }
-                });
+                    });
             });
         });
 
