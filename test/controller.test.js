@@ -432,55 +432,43 @@ describe('Signature Check', function() {
         });
     });
 
-    describe('#.registerEp', function() {
-        it('should be a function', function() {
+    describe('#.registerEp', () => {
+        it('should be a function', () => {
             expect(controller.registerEp).to.be.a('function');
         });
 
-        it('should throw if loEp is not a Coorpoint', function() {
-            expect(function() {
-                return controller.registerEp('x', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(1, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp([], function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp({}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(undefined, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(null, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(NaN, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(true, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(new Date(), function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(function() {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(rmEp1, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(rmEp2, function() {});
-            }).to.throw(TypeError);
+        it('should throw if loEp is not a Coorpoint', () => {
+            return Promise.all([
+                controller.registerEp('x')
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(1)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp([])
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp({})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(undefined)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(null)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(NaN)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(true)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(new Date())
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(function() {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(rmEp1)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.registerEp(rmEp2)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
 
-            expect(function() {
-                return controller.registerEp(loEp1, function() {});
-            }).not.to.throw(TypeError);
-            expect(function() {
-                return controller.registerEp(loEp8, function() {});
-            }).not.to.throw(TypeError);
+                controller.registerEp(loEp1)
+                    .catch((err) => expect(err).to.be.instanceof(Error)),
+                controller.registerEp(loEp8)
+                    .catch((err) => expect(err).to.be.instanceof(Error)),
+            ]);
         });
     });
 
@@ -1110,26 +1098,25 @@ describe('Functional Check', function() {
         });
     });
 
-    describe('#.registerEp', function() {
-        it('register loEp1', function(done) {
-            let requestStub = sinon.stub(controller, 'request', function(subsys, cmdId, valObj, callback) {
+    describe('#.registerEp', () => {
+        it('register loEp1', (done) => {
+            let requestStub = sinon.stub(controller, 'request', (subsys, cmdId, valObj, callback) => {
                 let deferred = Q.defer();
 
                 expect(cmdId).to.be.equal('register');
 
-                setImmediate(function() {
+                setImmediate(() => {
                     deferred.resolve({status: 0});
                 });
 
                 return deferred.promise.nodeify(callback);
             });
 
-            controller.registerEp(loEp1, function(err) {
-                if (!err) {
+            controller.registerEp(loEp1)
+                .then(() => {
                     requestStub.restore();
                     done();
-                }
-            });
+                });
         });
     });
 
