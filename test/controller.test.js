@@ -846,72 +846,57 @@ describe('Signature Check', function() {
         });
     });
 
-    describe('#.remove', function() {
+    describe('#.remove', () => {
         it('should be a function', function() {
             expect(controller.remove).to.be.a('function');
         });
 
-        it('should throw if dev is not a Device', function() {
-            expect(function() {
-                return controller.remove('x', {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(1, {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove([], {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove({}, {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(undefined, {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(null, {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(NaN, {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(true, {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(new Date(), {}, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(function() {}, {}, function() {});
-            }).to.throw(TypeError);
+        it('should throw if dev is not a Device', () => {
+            return Promise.all([
+                controller.remove('x', {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(1, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove([], {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove({}, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(undefined, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(null, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(true, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(NaN, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(new Date(), {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(() => {}, {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+            ]);
         });
 
-        it('should throw if cfg is not an object', function() {
-            expect(function() {
-                return controller.remove(remoteDev, 'x', function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, 1, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, [], function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, undefined, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, null, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, NaN, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, true, function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, new Date(), function() {});
-            }).to.throw(TypeError);
-            expect(function() {
-                return controller.remove(remoteDev, function() {}, function() {});
-            }).to.throw(TypeError);
+        it('should throw if cfg is not an object', () => {
+            return Promise.all([
+                controller.remove(remoteDev, 'x')
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, 1)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, [])
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, undefined)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, null)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, NaN)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, true)
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, new Date())
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+                controller.remove(remoteDev, function() {})
+                    .catch((err) => expect(err).to.be.instanceof(TypeError)),
+            ]);
         });
     });
 });
@@ -1103,26 +1088,25 @@ describe('Functional Check', function() {
         });
     });
 
-    describe('#.remove', function() {
-        it('remove device', function(done) {
-            let requestStub = sinon.stub(controller, 'request', function(subsys, cmdId, valObj, callback) {
+    describe('#.remove', () => {
+        it('remove device', (done) => {
+            let requestStub = sinon.stub(controller, 'request', (subsys, cmdId, valObj, callback) => {
                 let deferred = Q.defer();
 
                 expect(valObj.deviceaddress).to.be.equal('0x123456789abcdef');
 
-                setImmediate(function() {
+                setImmediate(() => {
                     deferred.resolve({status: 0});
                 });
 
                 return deferred.promise.nodeify(callback);
             });
 
-            controller.remove(remoteDev, {}, function(err) {
-                if (!err) {
+            controller.remove(remoteDev, {})
+                .then((err) => {
                     requestStub.restore();
                     done();
-                }
-            });
+                });
         });
     });
 

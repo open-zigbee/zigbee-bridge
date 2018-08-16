@@ -11,8 +11,8 @@
     - [.mount(zApp, callback)](#mountzapp-callback)
     - [.list([ieeeAddrs])](#listieeeaddrs)
     - [.find(addr, epId)](#findaddr-epid)
-    - [.lqi(ieeeAddr, callback)](#lqiieeeaddr-callback)
-    - [.remove(ieeeAddr[, cfg][, callback])](#removeieeeaddr-cfg-callback)
+    - [.lqi(ieeeAddr)](#lqiieeeaddr)
+    - [.remove(ieeeAddr[, cfg])](#removeieeeaddr-cfg)
     - [.acceptDevIncoming(devInfo, callback)](#acceptdevincomingdevinfo-callback)
     - [Event: 'ready'](#event-ready)
     - [Event: 'error'](#event-error)
@@ -369,7 +369,6 @@ Query the link quality index from a certain device by its ieee address.
 **Arguments:**
 
 1. `ieeeAddr` (_String_): Ieee address of the device.
-2. `callback` (_Function_): `function (err, data) { }`. This method returns you the link quality index via `data`. An error occurs if device not found.
 
 **Returns:**
 
@@ -378,10 +377,9 @@ Query the link quality index from a certain device by its ieee address.
 **Examples:**
 
 ```js
-bridge.lqi('0x00124b0001ce4beb', (err, data) => {
-  if (!err) {
-    console.log(data);
-    /*
+bridge.lqi('0x00124b0001ce4beb')
+  .then(() => console.log(data));
+  /*
     [
       {
         ieeeAddr: '0x00124b0001ce3631',
@@ -392,14 +390,12 @@ bridge.lqi('0x00124b0001ce4beb', (err, data) => {
         lqi: 70
       }
     ]
-    */
-  }
-});
+  */
 ```
 
 ********************************************
 
-### .remove(ieeeAddr[, cfg][, callback])
+### .remove(ieeeAddr[, cfg])
 
 Remove the device from the network.
 
@@ -409,7 +405,6 @@ Remove the device from the network.
 2. `cfg` (_Object_):
     - `reJoin` (_Boolean_): Set to `true` if device is allowed for re-joining, otherwise `false`. Default is `true`.
     - `rmChildren` (_Boolean_): Set to `true` will remove all children of this device as well. Default is `false`.
-3. `callback` (_Function_): `function (err) { }`.
 
 **Returns:**
 
@@ -418,18 +413,12 @@ Remove the device from the network.
 **Examples:**
 
 ```js
-bridge.remove('0x00124b0001ce4beb', (err) => {
-  if (!err) {
-    console.log('Successfully removed!');
-  }
-});
+bridge.remove('0x00124b0001ce4beb')
+  .then(() => console.log('Successfully removed!'));
 
 // remove and ban [TODO: how to unban???]
-bridge.remove('0x00124b0001ce4beb', { reJoin: false }, (err) => {
-  if (!err) {
-    console.log('Successfully removed!');
-  }
-});
+bridge.remove('0x00124b0001ce4beb', { reJoin: false })
+  .then(() => console.log('Successfully removed!'));
 ```
 
 ********************************************

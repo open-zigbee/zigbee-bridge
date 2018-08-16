@@ -271,17 +271,16 @@ describe('Bridge Top Level of Tests', function() {
             });
         });
 
-        describe('#.remove', function() {
-            it('should throw if ieeeAddr is not a string', function() {
-                expect(function() {
-                    bridge.remove({});
-                }).to.throw(TypeError);
-                expect(function() {
-                    bridge.remove(true);
-                }).to.throw(TypeError);
-                expect(function() {
-                    bridge.remove('ceed');
-                }).not.to.throw(TypeError);
+        describe('#.remove', () => {
+            it('should throw if ieeeAddr is not a string', () => {
+                return Promise.all([
+                    bridge.remove({})
+                        .catch((e) => expect(e).to.be.instanceof(TypeError)),
+                    bridge.remove(true)
+                        .catch((e) => expect(e).to.be.instanceof(TypeError)),
+                    bridge.remove('ceed')
+                        .catch((e) => expect(e).to.be.instanceof(Error)),
+                ]);
             });
         });
     });
@@ -454,12 +453,12 @@ describe('Bridge Top Level of Tests', function() {
             });
         });
 
-        describe('#.lqi', function() {
-            it('should get lqi of the device', function(done) {
-                let requestStub = sinon.stub(bridge.controller, 'request', function(subsys, cmdId, valObj, callback) {
+        describe('#.lqi', () => {
+            it('should get lqi of the device', (done) => {
+                let requestStub = sinon.stub(bridge.controller, 'request', (subsys, cmdId, valObj, callback) => {
                     let deferred = Q.defer();
 
-                    process.nextTick(function() {
+                    process.nextTick(() => {
                         deferred.resolve({
                             srcaddr: 100,
                             status: 0,
@@ -495,24 +494,23 @@ describe('Bridge Top Level of Tests', function() {
             });
         });
 
-        describe('#.remove', function() {
-            it('should remove the device', function(done) {
-                let requestStub = sinon.stub(bridge.controller, 'request', function(subsys, cmdId, valObj, callback) {
+        describe('#.remove', () => {
+            it('should remove the device', (done) => {
+                let requestStub = sinon.stub(bridge.controller, 'request', (subsys, cmdId, valObj, callback) => {
                     let deferred = Q.defer();
 
-                    process.nextTick(function() {
+                    process.nextTick(() => {
                         deferred.resolve({srcaddr: 100, status: 0});
                     });
 
                     return deferred.promise.nodeify(callback);
                 });
 
-                bridge.remove('0x00137a00000161f2', function(err) {
-                    if (!err) {
+                bridge.remove('0x00137a00000161f2')
+                    .then(() =>{
                         requestStub.restore();
                         done();
-                    }
-                });
+                    });
             });
         });
 
